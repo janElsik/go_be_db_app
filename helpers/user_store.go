@@ -48,7 +48,7 @@ func (store *DBstore) GetUsers() ([]*FullUser, error) {
 
 	}(rows)
 
-	users := []*FullUser{}
+	var users []*FullUser
 
 	for rows.Next() {
 		user := &FullUser{}
