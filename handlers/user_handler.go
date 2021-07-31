@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gofiber/fiber"
-
 	"time"
 )
 
@@ -41,5 +41,15 @@ func CreateUserHandler(c *fiber.Ctx) {
 	}
 
 	c.Status(200).SendString("all ok")
+
+}
+
+func GetUsersHandler(c *fiber.Ctx) {
+
+	users, err := StoreToDB.GetUsers()
+	if err != nil {
+		fmt.Println("error with getUsers", err)
+	}
+	c.Send(json.Marshal(users))
 
 }
