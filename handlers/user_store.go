@@ -9,6 +9,7 @@ type Store interface {
 	CreateUser(user *User) error
 	GetUsers() ([]*FullUser, error)
 	UpdateUser(user *UserWithoutTime) error
+	DeleteUser(user *UserId) error
 }
 
 type DBstore struct {
@@ -22,6 +23,11 @@ func (store *DBstore) CreateUser(user *User) error {
 
 func (store *DBstore) UpdateUser(user *UserWithoutTime) error {
 	_, err := store.Db.Query("update users set first_name = $2, last_name=$3, age=$4 where id=$1", user.Id, user.FirstName, user.LastName, user.Age)
+	return err
+}
+
+func (store *DBstore) DeleteUser(user *UserId) error {
+	_, err := store.Db.Query("delete from users where id = $1", user.Id)
 	return err
 }
 

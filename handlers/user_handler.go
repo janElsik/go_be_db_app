@@ -1,11 +1,14 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gofiber/fiber"
 	"time"
 )
+
+type UserId struct {
+	Id int `json:"id"`
+}
 
 type User struct {
 	FirstName string `json:"first_name"`
@@ -22,10 +25,10 @@ type FullUser struct {
 }
 
 type UserWithoutTime struct {
-	Id        int    `json:"id,omitempty"`
-	FirstName string `json:"first_name,omitempty"`
-	LastName  string `json:"last_name,omitempty"`
-	Age       int    `json:"age,omitempty"`
+	Id        int    `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Age       int    `json:"age"`
 }
 
 func CreateUserHandler(c *fiber.Ctx) {
@@ -47,7 +50,10 @@ func CreateUserHandler(c *fiber.Ctx) {
 		fmt.Println("error storing to database", err)
 	}
 
-	c.Status(200).SendString("all ok")
+	err = c.JSON(user)
+	if err != nil {
+		fmt.Println("error with JSON response in CreateUserHandler", err)
+	}
 
 }
 
@@ -57,7 +63,34 @@ func GetUsersHandler(c *fiber.Ctx) {
 	if err != nil {
 		fmt.Println("error with getUsers", err)
 	}
-	c.Send(json.Marshal(users))
+
+	err = c.JSON(users)
+	if err != nil {
+		fmt.Println("error with JSON response in GetUsersHandler", err)
+	}
+
+}
+
+func DeleteUserHandler(c *fiber.Ctx) {
+	user := UserId{}
+
+	u := new(UserId)
+	if err := c.BodyParser(u); err != nil {
+		c.SendStatus(500)
+		c.SendString("Body Parser error")
+	}
+
+	user.Id = u.Id
+
+	err := StoreToDB.DeleteUser(&user)
+	if err != nil {
+		fmt.Println("error deleting from database", err)
+	}
+
+	err = c.JSON(user)
+	if err != nil {
+		fmt.Println("error with JSON response in CreateUserHandler", err)
+	}
 
 }
 
@@ -80,6 +113,8 @@ func UpdateUserHandler(c *fiber.Ctx) {
 		fmt.Println("error storing to database", err)
 	}
 
-	c.Status(200).Send(json.Marshal(user))
-
+	err = c.JSON(user)
+	if err != nil {
+		fmt.Println("error with JSON response in UpdateUserHandler", err)
+	}
 }
