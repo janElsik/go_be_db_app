@@ -19,6 +19,7 @@ const (
 func setupRoutes(app *fiber.App) {
 	app.Post("/api/v1/create_user", handlers.CreateUserHandler)
 	app.Get("/api/v1/get_users", handlers.GetUsersHandler)
+	app.Post("/api/v1/update_user", handlers.UpdateUserHandler)
 }
 
 func main() {

@@ -8,6 +8,7 @@ import (
 type Store interface {
 	CreateUser(user *User) error
 	GetUsers() ([]*FullUser, error)
+	UpdateUser(user *UserWithoutTime) error
 }
 
 type DBstore struct {
@@ -16,6 +17,11 @@ type DBstore struct {
 
 func (store *DBstore) CreateUser(user *User) error {
 	_, err := store.Db.Query("INSERT INTO users(first_name, last_name, age) VALUES($1,$2,$3)", user.FirstName, user.LastName, user.Age)
+	return err
+}
+
+func (store *DBstore) UpdateUser(user *UserWithoutTime) error {
+	_, err := store.Db.Query("update users set first_name = $2, last_name=$3, age=$4 where id=$1", user.Id, user.FirstName, user.LastName, user.Age)
 	return err
 }
 
