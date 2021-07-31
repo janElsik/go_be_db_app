@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber"
 	_ "github.com/lib/pq"
-	"go_be_db_app/handlers"
+	"go_be_db_app/helpers"
 )
 
 const (
@@ -17,10 +17,10 @@ const (
 )
 
 func setupRoutes(app *fiber.App) {
-	app.Post("/api/v1/create_user", handlers.CreateUserHandler)
-	app.Get("/api/v1/get_users", handlers.GetUsersHandler)
-	app.Post("/api/v1/update_user", handlers.UpdateUserHandler)
-	app.Post("/api/v1/delete_user", handlers.DeleteUserHandler)
+	app.Post("/api/v1/create_user", helpers.CreateUserHandler)
+	app.Get("/api/v1/get_users", helpers.GetUsersHandler)
+	app.Post("/api/v1/update_user", helpers.UpdateUserHandler)
+	app.Post("/api/v1/delete_user", helpers.DeleteUserHandler)
 }
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 		panic(err)
 	}
 
-	handlers.InitStore(&handlers.DBstore{Db: db})
+	helpers.InitStore(&helpers.DBstore{Db: db})
 
 	app := fiber.New()
 	setupRoutes(app)
